@@ -1,0 +1,27 @@
+<div class="pt-4">
+    <div class="grid grid-cols-3 gap-4">
+        @if (tables$ | async; as tables) {
+        @for (table of tables; track table.tableName) {
+        <section class="min-h-[200px]" hlmCard>
+            <div class="overflow-ellipsis" hlmCardHeader>
+                <h3 hlmCardTitle>{{ table.tableName }}</h3>
+            </div>
+            <div hlmCardContent class="grid gap-4">
+                <div class="flex items-center p-4 border border-border space-x-4 rounded-md">
+                    <hlm-icon size="lg" name="lucideTable" />
+                    <div class="flex-1 space-y-1">
+                        <p class="text-sm font-medium leading-none">(-) linhas</p>
+                        <p class="text-sm text-muted-foreground">Clique para pesquisar</p>
+                    </div>
+                </div>
+            </div>
+            <div hlmCardFooter class="justify-between">
+                <button class="w-full" hlmBtn (click)="goToTable(table)">
+                    Pesquisar
+                </button>
+            </div>
+        </section>
+        }
+        }
+    </div>
+</div>

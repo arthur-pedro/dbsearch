@@ -1,0 +1,27 @@
+<div class="pt-4">
+    <div class="grid grid-cols-3 gap-4">
+        @if (schemas$ | async; as schemas) {
+        @for (schema of schemas; track schema.name) {
+        <section class="min-h-[200px]" hlmCard>
+            <div class="min-h-[80px] overflow-ellipsis" hlmCardHeader>
+                <h3 hlmCardTitle>{{ schema.name }}</h3>
+            </div>
+            <div hlmCardContent class="grid gap-4">
+                <div class="flex items-center p-4 border border-border space-x-4 rounded-md">
+                    <hlm-icon size="lg" name="lucideNewspaper" />
+                    <div class="flex-1 space-y-1">
+                        <p class="text-sm font-medium leading-none">(-) tabelas</p>
+                        <p class="text-sm text-muted-foreground">Clique para entrar</p>
+                    </div>
+                </div>
+            </div>
+            <div hlmCardFooter class="justify-between">
+                <button class="w-full" hlmBtn (click)="goToSchema(schema)">
+                    Entrar
+                </button>
+            </div>
+        </section>
+        }
+        }
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="p-3 flex justify-between">
+        <h1 class="text-3xl font-bold">
+            DB Search
+        </h1>
+    </div>
+    <div hlmAlert>
+        <hlm-icon hlmAlertIcon name="lucideBox" />
+        <h4 hlmAlertTitle>Bem vindo ao Db Search!</h4>
+        <p hlmAlertDesc>
+            Projeto open source desenvolvido por <a href="https://github.com/arthur-pedro">{{ '@arthur-pedro'
+                }}</a><br />
+            com a finalidade de evitar a exposição de dados sensíveis a usuários não autorizados.
+        </p>
+    </div>
+    <div class="flex justify-end mt-4 gap-2">
+        <button hlmBtn (click)="goBack()">
+            <hlm-icon size="sm" name="lucideArrowLeft" class="mr-2" />
+            Voltar
+        </button>
+        <hlm-sheet side="bottom">
+            <button id="where-filter" brnSheetTrigger hlmBtn>
+                <hlm-icon size="sm" name="lucideSearch" class="mr-2" />
+                Pesquisar
+            </button>
+            <hlm-sheet-content *brnSheetContent="let ctx">
+                <hlm-sheet-header>
+                    <h3 hlmSheetTitle>Filtros</h3>
+                    <p hlmSheetDescription>Aplicar filtro para tabela <strong>{{ searchService.getTable() }}</strong>
+                    </p>
+                </hlm-sheet-header>
+                <div class="py-4 grid gap-4">
+                    @for (column of searchService.getColumns(); track column) {
+                    <div class="items-center grid grid-cols-4 gap-4">
+                        <label hlmLabel for="{{column}}" class="text-right">{{ column }}</label>
+                        <input hlmInput id="{{column}}" value="{{searchService.getFilter(column)}}"
+                            (input)="onInputFilter(column, $event)" class="col-span-3" />
+                    </div>
+                    }
+                </div>
+                <hlm-sheet-footer>
+                    <button hlmBtn type="submit" (click)="searchService.submit()">Aplicar</button>
+                </hlm-sheet-footer>
+            </hlm-sheet-content>
+        </hlm-sheet>
+    </div>
+    <router-outlet />
+</div>

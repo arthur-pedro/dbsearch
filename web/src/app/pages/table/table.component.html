@@ -1,0 +1,51 @@
+<div class="pt-4">
+    @if (table$ | async; as table) {
+    <div class="overflow-x-scroll">
+        <hlm-table [contentEditable]="false" class="w-full min-w-[400px]">
+            <hlm-trow>
+                @for (c of table.columns; track c) {
+                <hlm-th class="w-60 border">{{ c }}</hlm-th>
+                }
+            </hlm-trow>
+            @for (row of table.data; track row['id']) {
+            <hlm-trow>
+                @for (c of table.columns; track c) {
+                <hlm-td class="border w-60 overflow-hidden">{{ row[c] || 'NULL' }}</hlm-td>
+                }
+            </hlm-trow>
+            } @empty {
+            <div class="text-center p-10">
+                <hlm-icon size="lg" name="lucideFolderSearch" />
+                <p class="p-4 w-full text-center">0 Resultados encontrados</p>
+            </div>
+            }
+
+            @if (table.data.length > 10) { <div class="mt-4 p-4">
+                <nav hlmPagination>
+                    <ul hlmPaginationContent>
+                        <li class="cursor-pointer" hlmPaginationItem (click)="previousPage()">
+                            <hlm-pagination-previous />
+                        </li>
+                        <!-- <li hlmPaginationItem>
+                                <a hlmPaginationLink link="#">1</a>
+                            </li>
+                            <li hlmPaginationItem>
+                                <a hlmPaginationLink link="#" isActive>2</a>
+                            </li>
+                            <li hlmPaginationItem>
+                                <a hlmPaginationLink link="#">3</a>
+                            </li>
+                            <li hlmPaginationItem>
+                                <hlm-pagination-ellipsis />
+                            </li> -->
+                        <li class="cursor-pointer" hlmPaginationItem (click)="nextPage()">
+                            <hlm-pagination-next />
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            }
+        </hlm-table>
+    </div>
+    }
+</div>
