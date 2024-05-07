@@ -12,8 +12,8 @@ import { HlmThComponent } from '../../../@core/components/ui-table-helm/src/lib/
 import { HlmTrowComponent } from '../../../@core/components/ui-table-helm/src/lib/hlm-trow.component';
 import { Schema } from '../../../@core/contracts/schema/schema.contract';
 import { Table } from '../../../@core/contracts/table/table.contract';
-import { DatabaseGateway } from '../../http/database-gateway.service';
-import { TableGateway } from '../../http/table-gateway.service';
+import { DatabaseGateway } from '../../gateway/database-gateway.service';
+import { TableGateway } from '../../gateway/table-gateway.service';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmCardContentDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card-content.directive';
 import { HlmCardDescriptionDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card-description.directive';

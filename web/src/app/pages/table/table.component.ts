@@ -18,7 +18,7 @@ import { HlmTdComponent } from '../../../@core/components/ui-table-helm/src/lib/
 import { HlmThComponent } from '../../../@core/components/ui-table-helm/src/lib/hlm-th.component';
 import { HlmTrowComponent } from '../../../@core/components/ui-table-helm/src/lib/hlm-trow.component';
 import { TableData } from '../../../@core/contracts/table/table-data.contract';
-import { TableGateway } from '../../http/table-gateway.service';
+import { TableGateway } from '../../gateway/table-gateway.service';
 import { SearchService, Where } from '../../services/search.service';
 
 @Component({

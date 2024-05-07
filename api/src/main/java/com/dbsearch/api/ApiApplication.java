@@ -7,17 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 public class ApiApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);
     }
-
-    @RestController
-    class TestController{
-        @GetMapping("api")
-        public String getTest() {
-            return "Welcome Home Spring";
-        }
-    }
-
 }

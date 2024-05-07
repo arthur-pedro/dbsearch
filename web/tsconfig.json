@@ -22,14 +22,14 @@
       "dom"
     ],
     "paths": {
+      "@spartan-ng/ui-button-helm": [
+        "./src/@core/components/ui-button-helm/src/index.ts"
+      ],
       "@spartan-ng/ui-icon-helm": [
         "./src/@core/components/ui-icon-helm/src/index.ts"
       ],
       "@spartan-ng/ui-pagination-helm": [
         "./src/@core/components/ui-pagination-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-button-helm": [
-        "./src/@core/components/ui-button-helm/src/index.ts"
       ]
     }
   },

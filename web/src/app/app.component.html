@@ -13,10 +13,19 @@
             com a finalidade de evitar a exposição de dados sensíveis a usuários não autorizados.
         </p>
     </div>
-    <div class="flex justify-end mt-4 gap-2">
+    <div class="flex items-center justify-end mt-4 gap-2">
+        <input aria-label='Filtrar' class='flex-auto'  size="lg" hlmInput type='text' placeholder='Pesquisar na página' />
+        <button hlmBtn>
+          <hlm-icon size="sm" name="lucideHome" class="mr-2" />
+          Home
+        </button>
         <button hlmBtn (click)="goBack()">
             <hlm-icon size="sm" name="lucideArrowLeft" class="mr-2" />
             Voltar
+        </button>
+        <button hlmBtn>
+          <hlm-icon size="sm" name="lucideShare" class="mr-2" />
+          Exportar
         </button>
         <hlm-sheet side="bottom">
             <button id="where-filter" brnSheetTrigger hlmBtn>

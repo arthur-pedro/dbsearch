@@ -20,8 +20,8 @@ public class ConnectionRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getDatabases() {
-        String sql = "SELECT datname AS name FROM pg_catalog.pg_database WHERE datistemplate = false ORDER BY name;";
+    public List<String> getDatabases(String databaseName) {
+        String sql = "SELECT datname AS name FROM pg_catalog.pg_database WHERE datistemplate = false AND datname = '"+ databaseName +"' ORDER BY name;";
         Query query = entityManager.createNativeQuery(sql);
         return query.getResultList();
     }

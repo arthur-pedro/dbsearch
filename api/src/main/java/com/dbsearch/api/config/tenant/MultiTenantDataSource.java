@@ -1,4 +1,4 @@
-package com.dbsearch.api.config.database;
+package com.dbsearch.api.config.tenant;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 

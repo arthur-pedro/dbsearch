@@ -13,7 +13,7 @@ import { HlmCardTitleDirective } from '../../../@core/components/ui-card-helm/sr
 import { HlmCardDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card.directive';
 import { HlmIconComponent } from '../../../@core/components/ui-icon-helm/src/lib/hlm-icon.component';
 import { Connection } from '../../../@core/contracts/connection/connection.contract';
-import { ConnectionGateway } from '../../http/connection-gateway.service';
+import { ConnectionGateway } from '../../gateway/connection-gateway.service';
 import { StorageService } from '../../services/storage.service';
 import { HlmBadgeDirective } from '../../../@core/components/ui-badge-helm/src/lib/hlm-badge.directive';
 

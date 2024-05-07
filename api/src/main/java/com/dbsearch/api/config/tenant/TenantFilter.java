@@ -1,8 +1,7 @@
-package com.dbsearch.api.config.database;
+package com.dbsearch.api.config.tenant;
 
 import java.io.IOException;
 
-import com.dbsearch.api.config.database.TenantContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

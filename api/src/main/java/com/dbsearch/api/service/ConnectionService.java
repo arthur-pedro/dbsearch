@@ -1,16 +1,14 @@
 package com.dbsearch.api.service;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
+import com.dbsearch.api.config.property.PropertyFile;
+import com.dbsearch.api.config.tenant.TenantContext;
 import com.dbsearch.api.dto.ConnectionDTO;
 import com.dbsearch.api.dto.DatabaseDTO;
-import com.dbsearch.api.dto.SchemaDTO;
 import org.springframework.stereotype.Service;
 
 import com.dbsearch.api.repository.ConnectionRepository;
@@ -29,20 +27,18 @@ public class ConnectionService {
     public List<ConnectionDTO> list() {
         List<ConnectionDTO> result = new ArrayList<>();
         File[] files = Paths.get("api/tenants").toFile().listFiles();
-        for (File propertyFile : files) {
-            Properties tenantProperties = new Properties();
-            try {
-                tenantProperties.load(new FileInputStream(propertyFile));
-                result.add(new ConnectionDTO(
-                    tenantProperties.getProperty("id"), 
-                    tenantProperties.getProperty("name"), 
-                    tenantProperties.getProperty("description"), 
-                    tenantProperties.getProperty("datasource.url"), 
-                    tenantProperties.getProperty("datasource.driver-class-name"), 
-                    new ArrayList<>()));
-            } catch (IOException exp) {
-                throw new RuntimeException("Problem in tenant datasource:" + exp);
-            }
+        assert files != null;
+        for (File file : files) {
+            PropertyFile propertyFile = new PropertyFile(file);
+            result.add(new ConnectionDTO(
+                propertyFile.getTenantId(),
+                propertyFile.getName(),
+                propertyFile.getDescription(),
+                propertyFile.getHost(),
+                propertyFile.getDriverClassName(),
+                propertyFile.getEnvironment(),
+                new ArrayList<>())
+            );
         }
         return result;
     }
@@ -50,7 +46,9 @@ public class ConnectionService {
     public List<DatabaseDTO> getDatabases() {
         List<DatabaseDTO> result = new ArrayList<>();
         ConnectionRepository connectionRepository = new ConnectionRepository(entityManager);
-        List<String> databases = connectionRepository.getDatabases();
+        PropertyFile propertyFile = new PropertyFile(TenantContext.getCurrentTenantFile());
+        String databaseName = propertyFile.getDatabase();
+        List<String> databases = connectionRepository.getDatabases(databaseName);
         for (String database : databases) {
             DatabaseDTO databaseDTO = new DatabaseDTO(database, database, "Descrição não encontrada", new ArrayList<>());
             databaseDTO.setName(database);

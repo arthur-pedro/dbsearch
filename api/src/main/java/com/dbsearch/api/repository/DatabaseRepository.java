@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 @Repository
 @Transactional
 public class DatabaseRepository {
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public DatabaseRepository(EntityManager entityManager) {
         this.entityManager = entityManager;

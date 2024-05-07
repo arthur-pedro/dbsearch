@@ -1,4 +1,4 @@
-package com.dbsearch.api.config.database;
+package com.dbsearch.api.config.tenant;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +30,7 @@ public class MultitenantConfiguration {
         File[] files = Paths.get("api/tenants").toFile().listFiles();
         Map<Object, Object> resolvedDataSources = new HashMap<>();
 
+        assert files != null;
         for (File propertyFile : files) {
             Properties tenantProperties = new Properties();
             DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -41,7 +42,15 @@ public class MultitenantConfiguration {
                 dataSourceBuilder.driverClassName(tenantProperties.getProperty("datasource.driver-class-name"));
                 dataSourceBuilder.username(tenantProperties.getProperty("datasource.username"));
                 dataSourceBuilder.password(tenantProperties.getProperty("datasource.password"));
-                dataSourceBuilder.url(tenantProperties.getProperty("datasource.url"));
+                StringBuilder url = new StringBuilder();
+                url.append(tenantProperties.getProperty("datasource.jdbc"));
+                url.append("://");
+                url.append(tenantProperties.getProperty("datasource.host"));
+                url.append(":");
+                url.append(tenantProperties.getProperty("datasource.port"));
+                url.append("/");
+                url.append(tenantProperties.getProperty("datasource.database"));
+                dataSourceBuilder.url(url.toString());
                 resolvedDataSources.put(tenantId, dataSourceBuilder.build());
             } catch (IOException exp) {
                 throw new RuntimeException("Problem in tenant datasource:" + exp);

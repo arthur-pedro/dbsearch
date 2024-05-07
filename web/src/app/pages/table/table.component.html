@@ -1,5 +1,30 @@
 <div class="pt-4">
     @if (table$ | async; as table) {
+
+<!--      <div class="overflow-x-scroll">-->
+<!--        <table class="table-auto w-full min-w-[400px]">-->
+<!--          <thead>-->
+<!--          <tr>-->
+<!--            @for (c of table.columns; track c) {-->
+<!--              <th class="border px-4 py-2">{{ c }}</th>-->
+<!--            }-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--            @for (row of table.data; track row['id']) {-->
+<!--              <tr>-->
+<!--                @for (c of table.columns; track c) {-->
+<!--                  <td class="border px-2 py-2">{{ row[c] || 'NULL' }}</td>-->
+<!--                }-->
+<!--              </tr>-->
+<!--            } @empty {-->
+<!--              <tr>-->
+<!--                <td class="border px-4 py-2" >0 Resultados encontrados</td>-->
+<!--              </tr>-->
+<!--            }-->
+<!--          </tbody>-->
+<!--        </table>-->
+<!--      </div>-->
     <div class="overflow-x-scroll">
         <hlm-table [contentEditable]="false" class="w-full min-w-[400px]">
             <hlm-trow>
@@ -20,7 +45,7 @@
             </div>
             }
 
-            @if (table.data.length > 10) { <div class="mt-4 p-4">
+             <div class="mt-4 p-4">
                 <nav hlmPagination>
                     <ul hlmPaginationContent>
                         <li class="cursor-pointer" hlmPaginationItem (click)="previousPage()">
@@ -44,7 +69,7 @@
                     </ul>
                 </nav>
             </div>
-            }
+
         </hlm-table>
     </div>
     }

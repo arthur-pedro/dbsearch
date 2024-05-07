@@ -6,6 +6,9 @@ import {
   lucideArrowLeft,
   lucideSearch,
   lucideCross,
+  lucideHome,
+  lucideShare,
+  lucideShare2
 } from '@ng-icons/lucide';
 import { HlmAlertDescriptionDirective } from '../@core/components/ui-alert-helm/src/lib/hlm-alert-description.directive';
 import { HlmAlertIconDirective } from '../@core/components/ui-alert-helm/src/lib/hlm-alert-icon.directive';
@@ -53,7 +56,7 @@ import { SearchService } from './services/search.service';
     HlmLabelDirective,
   ],
   providers: [
-    provideIcons({ lucideBox, lucideArrowLeft, lucideSearch, lucideCross }),
+    provideIcons({ lucideBox, lucideArrowLeft, lucideSearch, lucideCross, lucideHome, lucideShare }),
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

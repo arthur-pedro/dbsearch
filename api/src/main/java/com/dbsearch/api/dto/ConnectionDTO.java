@@ -2,6 +2,7 @@ package com.dbsearch.api.dto;
 
 import java.util.List;
 
+import com.dbsearch.api.config.property.TenantEnvironment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -17,5 +18,6 @@ public class ConnectionDTO {
     private String description;
     private String host;
     private String driver;
+    private TenantEnvironment environment;
     private List<DatabaseDTO> databases;
 }
