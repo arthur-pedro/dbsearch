@@ -1,4 +1,4 @@
-package com.dbsearch.api.config.property;
+package com.dbsearch.api.config.tenant;
 
 public enum TenantEnvironment {
     DEVELOPMENT("development"),

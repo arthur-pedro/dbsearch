@@ -32,4 +32,5 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/table/table.component').then((mod) => mod.TableComponent),
   },
+  // { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

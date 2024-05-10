@@ -1,4 +1,4 @@
-package com.dbsearch.api.config.property;
+package com.dbsearch.api.config.tenant;
 
 import org.springframework.boot.jdbc.DataSourceBuilder;
 
@@ -6,10 +6,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class PropertyFile {
+public class TenantPropertyFile {
     DataSourceBuilder<?> dataSourceBuilder;
     Properties tenantProperties;
-    public PropertyFile(File propertyFile) {
+    public TenantPropertyFile(File propertyFile) {
         this.tenantProperties = new Properties();
         this.dataSourceBuilder = DataSourceBuilder.create();
         if (!propertyFile.exists()) {

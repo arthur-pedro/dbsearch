@@ -1,11 +1,16 @@
 package com.dbsearch.api.repository;
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dbsearch.api.config.database.from.From;
+import com.dbsearch.api.config.database.query.QueryBuilder;
+import com.dbsearch.api.config.database.select.Blocklist;
+import com.dbsearch.api.config.database.select.Field;
+import com.dbsearch.api.config.database.select.SelectBuilder;
+import com.dbsearch.api.config.database.where.Where;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -31,8 +36,17 @@ public class TableRepository {
 
     @SuppressWarnings("unchecked")
     public List<String> findColumnsFromTable(String tableName, String schema) {
-        String sql = "SELECT column_name FROM information_schema.columns WHERE table_name = '" + tableName + "' AND table_schema = '" + schema + "'";
-        Query query = entityManager.createNativeQuery(sql);
+        Blocklist blocklist = new Blocklist();
+
+        SelectBuilder selectBuilder = new SelectBuilder(blocklist);
+        selectBuilder.add(new Field("column_name"));
+
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.select(selectBuilder.build());
+        queryBuilder.from(new From("information_schema.columns"));
+        queryBuilder.where(new Where("table_name = '" + tableName + "' AND table_schema = '" + schema + "'"));
+
+        Query query = entityManager.createNativeQuery(queryBuilder.build());
         return query.getResultList();
     }
 

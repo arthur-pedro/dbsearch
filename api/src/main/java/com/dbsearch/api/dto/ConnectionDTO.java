@@ -2,7 +2,7 @@ package com.dbsearch.api.dto;
 
 import java.util.List;
 
-import com.dbsearch.api.config.property.TenantEnvironment;
+import com.dbsearch.api.config.tenant.TenantEnvironment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

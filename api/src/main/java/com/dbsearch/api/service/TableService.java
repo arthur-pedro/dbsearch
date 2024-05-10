@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dbsearch.api.config.database.select.Blocklist;
+import com.dbsearch.api.config.database.select.Field;
 import com.dbsearch.api.dto.TableDataDTO;
 import com.dbsearch.api.dto.TableInfoDTO;
 import com.dbsearch.api.dto.TableSearchDTO;
@@ -27,17 +29,18 @@ public class TableService {
         TableRepository tableRepository = new TableRepository(entityManager);
         return tableRepository.findTableNames(schema)
             .stream()
-            .map(name -> new TableInfoDTO(name, new ArrayList<>()))
-            .toList();
+                .map(name -> new TableInfoDTO(name, new ArrayList<>()))
+                .toList();
     }
 
     public TableInfoDTO findTableColumns(String tableName, String schema) {
         TableRepository tableRepository = new TableRepository(entityManager);
         TableInfoDTO table = new TableInfoDTO(tableName, new ArrayList<>());
+        Blocklist blocklist = new Blocklist();
         tableRepository.findColumnsFromTable(tableName, schema)
-            .stream()
-            .map(column -> table.getColumns().add(column))
-            .toList();
+                .stream()
+                    .filter(column -> blocklist.IsBlocked(new Field(column)))
+                    .forEach(table.getColumns()::add);
         return table;
     }
 
@@ -46,6 +49,14 @@ public class TableService {
         List<String> columnNames = findTableColumns(search.getTableName(), search.getSchema()).getColumns();
         if (search.getFields() == null || search.getFields().isEmpty()) {
             search.setFields(columnNames);
+        } else {
+            Blocklist blocklist = new Blocklist();
+            search.setFields(
+                    search.getFields()
+                    .stream()
+                        .filter(column -> blocklist.IsBlocked(new Field(column)))
+                        .toList()
+            );
         }
         List<Object[]> results = tableRepository.search(
             search.getTableName(), 

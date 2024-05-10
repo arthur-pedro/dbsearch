@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.dbsearch.api.config.FilePath;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -27,7 +28,7 @@ public class MultitenantConfiguration {
     @ConfigurationProperties(prefix = "tenants")
     @SuppressWarnings("rawtypes")
     public DataSource dataSource() {
-        File[] files = Paths.get("api/tenants").toFile().listFiles();
+        File[] files = Paths.get(FilePath.TENANTS.getValue()).toFile().listFiles();
         Map<Object, Object> resolvedDataSources = new HashMap<>();
 
         assert files != null;

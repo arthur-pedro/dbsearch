@@ -35,7 +35,7 @@
             @for (row of table.data; track row['id']) {
             <hlm-trow>
                 @for (c of table.columns; track c) {
-                <hlm-td class="border w-60 overflow-hidden">{{ row[c] || 'NULL' }}</hlm-td>
+                <hlm-td  class="w-60 border overflow-hidden">{{ row[c] || 'NULL' }}</hlm-td>
                 }
             </hlm-trow>
             } @empty {
