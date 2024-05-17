@@ -10,7 +10,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import com.dbsearch.api.config.FilePath;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
