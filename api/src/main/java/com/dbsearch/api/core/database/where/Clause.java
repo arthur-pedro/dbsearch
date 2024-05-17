@@ -1,7 +1,7 @@
 package com.dbsearch.api.core.database.where;
 
 import com.dbsearch.api.core.database.from.Table;
-import com.dbsearch.api.core.database.select.Field;
+import com.dbsearch.api.core.database.select.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,12 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Clause {
 		private Table table;
-		private Field field;
+		private Column column;
 		private ClauseOperation operation;
 		private String value;
 
 
 		public String toString() {
-				return table.getAlias() + "." + field.getName() + " " + operation.getValue() + " '" + value + "'";
+				return table.getAlias() + "." + column.getName() + " " + operation.getValue() + " '" + value + "'";
 		}
 }

@@ -8,23 +8,23 @@ import java.util.stream.Collectors;
 
 @Getter
 public class SelectBuilder {
-		private final List<Field> fields = new ArrayList<>();
+		private final List<Column> columns = new ArrayList<>();
 		private final Blocklist blocklist;
 
 		public SelectBuilder() {
 				this.blocklist = new Blocklist();
 		}
 
-		public SelectBuilder add(Field field) {
-				if (blocklist.IsBlocked(field)) {
-						this.fields.add(field);
+		public SelectBuilder add(Column column) {
+				if (blocklist.IsBlocked(column)) {
+						this.columns.add(column);
 				}
 				return this;
 		}
 
 		public Select build() {
-				String formattedFields = fields.stream()
-								.map(Field::getName)
+				String formattedFields = columns.stream()
+								.map(Column::getName)
 								.collect(Collectors.joining(", "));
 				return new Select(formattedFields);
 		}

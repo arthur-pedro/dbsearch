@@ -4,7 +4,7 @@ package com.dbsearch.api.repository.table;
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.from.Table;
 import com.dbsearch.api.core.database.query.QueryBuilder;
-import com.dbsearch.api.core.database.select.Field;
+import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
 import com.dbsearch.api.core.database.where.ClauseOperation;
@@ -32,7 +32,7 @@ public class TableRepository {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
 				queryBuilder.select(
-								new SelectBuilder().add(new Field("tablename"))
+								new SelectBuilder().add(new Column("tablename"))
 				);
 				queryBuilder.from(
 								new FromBuilder().add(new Table("pg_tables")))
@@ -41,7 +41,7 @@ public class TableRepository {
 								new WhereBuilder().add(
 												new Clause(
 																new Table("pg_tables"),
-																new Field("schemaname"), ClauseOperation.EQUALS, schema)
+																new Column("schemaname"), ClauseOperation.EQUALS, schema)
 								));
 				String sql = queryBuilder.build();
 				Query query = entityManager.createNativeQuery(sql);
@@ -53,7 +53,7 @@ public class TableRepository {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
 				SelectBuilder selectBuilder = new SelectBuilder();
-				selectBuilder.add(new Field("column_name"));
+				selectBuilder.add(new Column("column_name"));
 
 				FromBuilder fromBuilder = new FromBuilder();
 				fromBuilder.add(new Table("information_schema.columns"));
@@ -61,8 +61,9 @@ public class TableRepository {
 				WhereBuilder whereBuilder = new WhereBuilder();
 
 				whereBuilder.add(
-								new Clause(fromBuilder.getTable(), new Field("table_name"), ClauseOperation.EQUALS, tableName));
-				whereBuilder.add(new Clause(fromBuilder.getTable(), new Field("table_schema"), ClauseOperation.EQUALS, schema));
+								new Clause(fromBuilder.getTable(), new Column("table_name"), ClauseOperation.EQUALS, tableName));
+				whereBuilder.add(
+								new Clause(fromBuilder.getTable(), new Column("table_schema"), ClauseOperation.EQUALS, schema));
 
 				queryBuilder
 								.select(selectBuilder)

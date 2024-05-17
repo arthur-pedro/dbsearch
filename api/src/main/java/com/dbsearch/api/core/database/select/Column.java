@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Field {
+public class Column {
 		private String name;
 		private String alias;
 
-		public Field(String name) {
+		public Column(String name) {
 				this.name = name;
 				this.alias = this.buildAlias(this.name);
 		}

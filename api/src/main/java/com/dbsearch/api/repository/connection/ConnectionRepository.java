@@ -6,7 +6,7 @@ import com.dbsearch.api.core.database.from.Table;
 import com.dbsearch.api.core.database.order.OrderBuilder;
 import com.dbsearch.api.core.database.order.OrderDirection;
 import com.dbsearch.api.core.database.query.QueryBuilder;
-import com.dbsearch.api.core.database.select.Field;
+import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
 import com.dbsearch.api.core.database.where.ClauseOperation;
@@ -33,7 +33,7 @@ public class ConnectionRepository {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
 				SelectBuilder selectBuilder = new SelectBuilder();
-				selectBuilder.add(new Field("datname"));
+				selectBuilder.add(new Column("datname"));
 
 				FromBuilder fromBuilder = new FromBuilder();
 				Table table = new Table("pg_catalog.pg_database");
@@ -42,13 +42,13 @@ public class ConnectionRepository {
 				WhereBuilder whereBuilder = new WhereBuilder();
 				Clause datistemplateClause = new Clause(
 								table,
-								new Field("datistemplate"),
+								new Column("datistemplate"),
 								ClauseOperation.EQUALS,
 								Boolean.FALSE.toString()
 				);
 				Clause datnameClause = new Clause(
 								table,
-								new Field("datname"),
+								new Column("datname"),
 								ClauseOperation.EQUALS,
 								databaseName
 				);
@@ -59,7 +59,7 @@ public class ConnectionRepository {
 				OrderBuilder orderBuilder = new OrderBuilder();
 				orderBuilder.add(
 								table,
-								new Field("datname"),
+								new Column("datname"),
 								OrderDirection.ASC);
 
 				queryBuilder

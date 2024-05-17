@@ -23,11 +23,11 @@ public class Blocklist {
 				reader.lines().forEach(this.blocklist::add);
 		}
 
-		public List<Field> filter(List<Field> fields) {
-				return fields.stream().filter(field->this.blocklist.contains(field.getName().toUpperCase())).toList();
+		public List<Column> filter(List<Column> columns) {
+				return columns.stream().filter(field->this.blocklist.contains(field.getName().toUpperCase())).toList();
 		}
 
-		public boolean IsBlocked(Field field) {
-				return this.blocklist.stream().noneMatch(line->line.contains(field.getName().toUpperCase()));
+		public boolean IsBlocked(Column column) {
+				return this.blocklist.stream().noneMatch(line->line.contains(column.getName().toUpperCase()));
 		}
 }

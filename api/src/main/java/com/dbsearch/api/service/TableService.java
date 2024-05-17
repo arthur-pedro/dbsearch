@@ -1,22 +1,20 @@
 package com.dbsearch.api.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.dbsearch.api.core.database.select.Blocklist;
-import com.dbsearch.api.core.database.select.Field;
+import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.dto.TableDataDTO;
 import com.dbsearch.api.core.dto.TableInfoDTO;
 import com.dbsearch.api.core.dto.TableSearchDTO;
 import com.dbsearch.api.repository.table.TableRepository;
-import org.springframework.stereotype.Service;
-
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -43,7 +41,7 @@ public class TableService {
 						search.setFields(
 										search.getFields()
 														.stream()
-														.filter(column->blocklist.IsBlocked(new Field(column)))
+														.filter(column->blocklist.IsBlocked(new Column(column)))
 														.toList()
 						);
 				}
@@ -71,7 +69,7 @@ public class TableService {
 				Blocklist blocklist = new Blocklist();
 				tableRepository.findColumnsFromTable(tableName, schema)
 								.stream()
-								.filter(column->blocklist.IsBlocked(new Field(column)))
+								.filter(column->blocklist.IsBlocked(new Column(column)))
 								.forEach(table.getColumns()::add);
 				return table;
 		}

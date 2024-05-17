@@ -4,7 +4,7 @@ package com.dbsearch.api.repository.database;
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.from.Table;
 import com.dbsearch.api.core.database.query.QueryBuilder;
-import com.dbsearch.api.core.database.select.Field;
+import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
 import com.dbsearch.api.core.database.where.ClauseOperation;
@@ -31,7 +31,7 @@ public class DatabaseRepository {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
 				SelectBuilder selectBuilder = new SelectBuilder();
-				selectBuilder.add(new Field("schema_name"));
+				selectBuilder.add(new Column("schema_name"));
 
 
 				FromBuilder fromBuilder = new FromBuilder();
@@ -42,7 +42,7 @@ public class DatabaseRepository {
 				WhereBuilder whereBuilder = new WhereBuilder();
 				Clause clause = new Clause(
 								table,
-								new Field("catalog_name"),
+								new Column("catalog_name"),
 								ClauseOperation.EQUALS,
 								databaseName);
 				whereBuilder.add(clause);

@@ -1,24 +1,24 @@
 package com.dbsearch.api.core.database.order;
 
 import com.dbsearch.api.core.database.from.Table;
-import com.dbsearch.api.core.database.select.Field;
+import com.dbsearch.api.core.database.select.Column;
 import lombok.Getter;
 
 @Getter
 public class OrderBuilder {
 		private Table table;
-		private Field field;
+		private Column column;
 		private OrderDirection direction;
 
-		public OrderBuilder add(Table table, Field field, OrderDirection direction) {
+		public OrderBuilder add(Table table, Column column, OrderDirection direction) {
 				this.table = table;
-				this.field = field;
+				this.column = column;
 				this.direction = direction;
 				return this;
 		}
 
 		public Order build() {
-				return new Order(table.getAlias() + "." + field.getName() + " " + direction.getValue());
+				return new Order(table.getAlias() + "." + column.getName() + " " + direction.getValue());
 		}
 
 }
