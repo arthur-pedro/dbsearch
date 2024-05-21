@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TableData } from '../../@core/contracts/table/table-data.contract';
-import { Table } from '../../@core/contracts/table/table.contract';
+import { TableSearch } from '../../@core/contracts/table/request/search.contract';
+import { TableData } from '../../@core/contracts/table/response/table-data.contract';
+import { Table } from '../../@core/contracts/table/response/table.contract';
 import { environment } from '../../environments/environment';
-import { Where } from '../services/search.service';
 
 @Injectable({ providedIn: 'root' })
 export class TableGateway {
@@ -23,24 +23,10 @@ export class TableGateway {
     );
   }
 
-  fetchTableData(
-    schema: string,
-    table: string,
-    where: Where,
-    page: {
-      page: number;
-      pageSize: number;
-    }
-  ): Observable<TableData> {
-    let params = new HttpParams();
-    params = params.append('page', page.page);
-    params = params.append('size', page.pageSize);
-    params = params.append('schema', schema);
-    const dataObject = Object.fromEntries(where);
+  fetchTableData(search: TableSearch): Observable<TableData> {
     return this.http.post<TableData>(
-      environment.apiUrl + `/table/${table}/data`,
-      dataObject,
-      { params: params }
+      environment.apiUrl + `/table/data`,
+      TableSearch.toJSON(search)
     );
   }
 }

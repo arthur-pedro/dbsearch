@@ -1,20 +1,25 @@
-package com.dbsearch.api.core.database.from;
+package com.dbsearch.api.core.database.pagination;
 
-import lombok.Getter;
-import lombok.Setter;
+public class Page {
+		private final int page;
+		private final int size;
 
-@Getter
-public class Table {
-		private final String name;
-		private final String alias;
-		@Setter private String schema;
-
-		public Table(String name) {
-				this.name = name;
-				this.alias = this.buildAlias();
+		public Page(int page, int size) {
+				if (page < 1) {
+						page = 1;
+				}
+				if (size < 1) {
+						size = 10;
+				}
+				this.page = page;
+				this.size = size;
 		}
 
-		private String buildAlias() {
-				return this.name.substring(0, 1);
+		public int getLimit() {
+				return this.size;
+		}
+
+		public int getOffset() {
+				return (this.page - 1) * this.size;
 		}
 }

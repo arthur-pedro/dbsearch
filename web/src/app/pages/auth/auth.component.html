@@ -1,0 +1,60 @@
+<div class="login-wrapper">
+  <form class="login">
+    <div class="login-header">
+      <div class="logo"></div>
+      <div class="actions">
+        <clr-dropdown>
+          <button class="btn btn-link btn-sm" clrDropdownTrigger>
+            Language
+            <cds-icon shape="angle" direction="down"></cds-icon>
+          </button>
+          <clr-dropdown-menu>
+            <div aria-label="Language 1" clrDropdownItem>Language 1</div>
+            <div aria-label="Language 2" clrDropdownItem>Language 2</div>
+            <div aria-label="Language 3" clrDropdownItem>Language 3</div>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+      </div>
+    </div>
+    <div class="login-body">
+      <section class="title">
+        <div class="welcome">Bem-Vindo ao</div>
+        DbSearch
+        <div class="hint">
+          <span>Desenvolvido por {{ '@arthur-pedro' }}</span>
+        </div>
+      </section>
+      <div class="login-group">
+        <clr-select-container>
+          <label>Função</label>
+          <select clrSelect name="type">
+            <option value="local">Local</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </clr-select-container>
+        <clr-input-container>
+          <label class="clr-sr-only">E-mail</label>
+          <input type="text" autocomplete="username" name="username" clrInput placeholder="Enter e-mail" />
+        </clr-input-container>
+        <clr-password-container>
+          <label class="clr-sr-only">Senha</label>
+          <input type="password" autocomplete="current-password" name="password" clrPassword
+            placeholder="Enter password" />
+        </clr-password-container>
+        <clr-checkbox-wrapper>
+          <label>Manter conectado</label>
+          <input type="checkbox" name="rememberMe" clrCheckbox />
+        </clr-checkbox-wrapper>
+        <div class="error active">Email ou senha inválido</div>
+        <button (click)="goToHome()" type="submit" class="btn btn-primary">Log in</button>
+        <a href="javascript://" class="signup">Sign up for an account</a>
+      </div>
+    </div>
+    <div class="login-footer">
+      <span class="copyright">2023 VMware, Inc.</span>
+      <a href="javascript://">Terms</a>
+      <a href="javascript://">Privacy</a>
+      <a href="javascript://">California Privacy Rights</a>
+    </div>
+  </form>
+</div>

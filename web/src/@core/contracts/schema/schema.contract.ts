@@ -1,4 +1,4 @@
-import { Table } from '../table/table.contract';
+import { Table } from '../table/response/table.contract';
 
 export interface Schema {
   name: string;

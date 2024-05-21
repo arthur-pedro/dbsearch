@@ -1,42 +1,34 @@
-<div class="pt-4">
-    <div class="grid grid-cols-3 gap-4">
-        @if (databases$ | async; as databases) {
-        @for (database of databases; track database.id) {
-        <section hlmCard>
-            <div hlmCardHeader>
-                <h3 hlmCardTitle>{{ database.name }}</h3>
-                <p hlmCardDescription>Este banco tem {{ database.schemas.length }} schemas</p>
-            </div>
-            <div hlmCardContent class="grid gap-4">
-                <div class="flex items-center p-4 border border-border space-x-4 rounded-md">
-                    <hlm-icon size="lg" name="lucideDatabase" />
-                    <div class="flex-1 space-y-1">
-                        <p class="text-sm font-medium leading-none">Online</p>
-                        <p class="text-sm text-muted-foreground">Clique para acessar o banco</p>
-                    </div>
-                </div>
-                <div>
-                    @for (schema of database.schemas; track schema.name) {
-                    <div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
-                        <span class="flex w-2 h-2 rounded-full translate-y-1 bg-sky-500"></span>
-                        <div class="space-y-1">
-                            <p class="text-sm font-medium leading-none">{{ schema.name }}</p>
-                            <p class="text-sm text-muted-foreground">Possui {{ schema.tables.length }} tabelas</p>
-                        </div>
-                    </div>
-                    }
-                </div>
-            </div>
-            <div hlmCardFooter class="justify-between">
-                <button class="w-full" hlmBtn (click)="goToDatabase(database)">
-                    <!-- <hlm-icon size="sm" class="mr-2" name="lucideCheck" /> -->
-                    Entrar
-                </button>
-            </div>
-        </section>
-        } @empty {
-        <p>No results yet!</p>
+@if (databases$ | async; as databases) {
+@for (database of databases; track database.id) {
+<div class="clr-row">
+  <div class="clr-col-lg-4 clr-col-md-4 clr-col-12">
+    <div class="card">
+      <div class="card-header">
+        <cds-icon shape="data-cluster"></cds-icon>
+        {{ database.name }}
+      </div>
+      <div class="card-block">
+        <div class="card-title">{{ database.description }}</div>
+        <div class="card-text">
+          Este banco tem {{ database.schemas.length }} schemas
+        </div>
+        @for (schema of database.schemas; track schema.name) {
+        <div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+          <span class="flex w-2 h-2 rounded-full translate-y-1 bg-sky-500"></span>
+          <div class="space-y-1">
+            <p class="text-sm font-medium leading-none">{{ schema.name }}</p>
+            <p class="text-sm text-muted-foreground">Possui {{ schema.tables.length }} tabelas</p>
+          </div>
+        </div>
         }
-        }
+      </div>
+      <div class="card-footer">
+        <a class="btn btn-sm btn-link" (click)="goToDatabase(database)">Entrar</a>
+      </div>
     </div>
+  </div>
 </div>
+} @empty {
+<p>No results yet!</p>
+}
+}

@@ -1,20 +1,38 @@
-import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-export type Where = Map<string, string | undefined>;
+import { FormControl } from '@angular/forms';
+import {
+  Filter,
+  TableSearch,
+} from '../../@core/contracts/table/request/search.contract';
+import {
+  LOGIC_OPERATOR_SELECT_OPTIONS,
+  LogicOperator,
+} from '../../@core/types/logic-operator.enum';
+import {
+  CONDITION_OPERATOR_SELECT_OPTIONS,
+  ConditionOperator,
+} from '../../@core/types/condition-operatoe.enum';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
+  public searchInTable: FormControl<string | null> = new FormControl<string>(
+    ''
+  );
   private table: string = '';
   private schema: string = '';
   private page: number = 1;
   private pageSize: number = 10;
+  private totalData: number = 0;
   private columns: string[] = [];
-  private filters: Where = new Map();
-  private _where: BehaviorSubject<Where> = new BehaviorSubject(new Map());
+  private filters: Map<string, Filter> = new Map();
 
-  get where(): Observable<Where> {
-    return this._where.asObservable();
+  private _filters: BehaviorSubject<Map<string, Filter>> = new BehaviorSubject(
+    new Map()
+  );
+
+  get filters$(): Observable<Map<string, Filter>> {
+    return this._filters.asObservable();
   }
 
   setTable(table: string): void {
@@ -49,8 +67,23 @@ export class SearchService {
     return this.pageSize;
   }
 
+  getTotalData(): number {
+    return this.totalData;
+  }
+
+  setTotalData(totalData: number): void {
+    this.totalData = totalData;
+  }
+
   setColumns(columns: string[]): void {
-    columns.map((column) => this.filters.set(column, undefined));
+    columns.map((column) =>
+      this.filters.set(column, {
+        column,
+        value: undefined,
+        logicOperator: LogicOperator.AND,
+        conditionOperator: ConditionOperator.LIKE,
+      })
+    );
     this.columns = columns;
   }
 
@@ -58,12 +91,12 @@ export class SearchService {
     return this.columns;
   }
 
-  getFilter(column: string): string | undefined {
-    return this.filters.get(column);
+  getFilters(): Map<string, Filter> {
+    return this.filters;
   }
 
-  setFilter(column: string, value: string | undefined): void {
-    this.filters.set(column, value);
+  setFilter(filter: Filter): void {
+    this.filters.set(filter.column, filter);
   }
 
   clear(): void {
@@ -76,6 +109,34 @@ export class SearchService {
   }
 
   submit(): void {
-    this._where.next(this.filters);
+    this._filters.next(this.filters);
+  }
+
+  getPayload(): TableSearch {
+    return TableSearch.fromJSON({
+      columns: this.columns,
+      filters: this.filters
+        ? Array.from(this.filters.values())
+        : ([] as Filter[]),
+      page: this.page,
+      pageSize: this.pageSize,
+      schema: this.schema,
+      tableName: this.table,
+    });
+  }
+
+  searchInTableCtrl(): FormControl<string | null> {
+    return this.searchInTable;
+  }
+
+  get logicOperatorOptions(): { value: LogicOperator; label: string }[] {
+    return LOGIC_OPERATOR_SELECT_OPTIONS;
+  }
+
+  get conditionOperatorOptions(): {
+    value: ConditionOperator;
+    label: string;
+  }[] {
+    return CONDITION_OPERATOR_SELECT_OPTIONS;
   }
 }

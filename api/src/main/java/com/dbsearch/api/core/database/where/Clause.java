@@ -12,11 +12,77 @@ import lombok.Setter;
 public class Clause {
 		private Table table;
 		private Column column;
-		private ClauseOperation operation;
+		private ClauseConditionOperator logicCondition;
+		private ClauseLogicOperator logicOperator;
 		private String value;
 
 
 		public String toString() {
-				return table.getAlias() + "." + column.getName() + " " + operation.getValue() + " '" + value + "'";
+				if (logicCondition.equals(ClauseConditionOperator.IS_NULL) ||
+								logicCondition.equals(ClauseConditionOperator.IS_NOT_NULL))
+						return
+										logicOperator.getValue()
+														+ " "
+														+ table.getAlias()
+														+ "."
+														+ column.getName()
+														+ " "
+														+ logicCondition.getValue();
+				else if (logicCondition.equals(ClauseConditionOperator.IN) ||
+								logicCondition.equals(ClauseConditionOperator.NOT_IN))
+						return
+										logicOperator.getValue()
+														+ " "
+														+ table.getAlias()
+														+ "."
+														+ column.getName()
+														+ " "
+														+ logicCondition.getValue()
+														+ " ("
+														+ value
+														+ ")";
+				else if (logicCondition.equals(ClauseConditionOperator.BETWEEN))
+						return
+										logicOperator.getValue()
+														+ " "
+														+ table.getAlias()
+														+ "."
+														+ column.getName()
+														+ " "
+														+ logicCondition.getValue()
+														+ " "
+														+ value;
+				else if (logicCondition.equals(ClauseConditionOperator.LIKE))
+						return
+										logicOperator.getValue()
+														+ " "
+														+ table.getAlias()
+														+ "."
+														+ column.getName()
+														+ " "
+														+ logicCondition.getValue()
+														+ " '%"
+														+ value
+														+ "%'";
+				else if (logicCondition.equals(ClauseConditionOperator.EQUALS) ||
+								logicCondition.equals(ClauseConditionOperator.NOT_EQUALS) ||
+								logicCondition.equals(ClauseConditionOperator.GREATER_THAN) ||
+								logicCondition.equals(ClauseConditionOperator.GREATER_THAN_OR_EQUALS) ||
+								logicCondition.equals(ClauseConditionOperator.LESS_THAN) ||
+								logicCondition.equals(ClauseConditionOperator.LESS_THAN_OR_EQUALS))
+
+						return
+										logicOperator.getValue()
+														+ " "
+														+ table.getAlias()
+														+ "."
+														+ column.getName()
+														+ " "
+														+ logicCondition.getValue()
+														+ " '"
+														+ value
+														+ "'";
+				else
+						return "";
 		}
 }

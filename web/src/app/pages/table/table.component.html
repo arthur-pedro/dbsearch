@@ -1,76 +1,119 @@
-<div class="pt-4">
-    @if (table$ | async; as table) {
+<h2>
+  {{ selectedTable }}
+</h2>
+<p>
+  Pagina {{ searchService.getPage() }},
+  Item por página {{ searchService.getPageSize() }},
+  Total de itens {{ searchService.getTotalData() }}
+</p>
+<br>
+<clr-tabs>
+  <clr-tab>
+    <button clrTabLink>Dados</button>
+    <clr-tab-content *clrIfActive>
+      @if (table$ | async; as table) {
+      <clr-datagrid [(clrDgSelected)]="selectedRows">
+        <clr-dg-action-bar [ngStyle]="{ display: 'flex' , 'align-items' : 'center', gap: '10px' }">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-secondary" (click)="onAdd()">
+              <cds-icon shape="plus"></cds-icon>
+              Add ao grupo
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" (click)="onDelete()">
+              <cds-icon shape="close"></cds-icon>
+              Deletar
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" (click)="onEdit()" *ngIf="selectedRows.length == 1">
+              <cds-icon shape="pencil"></cds-icon>
+              Editar
+            </button>
+          </div>
 
-<!--      <div class="overflow-x-scroll">-->
-<!--        <table class="table-auto w-full min-w-[400px]">-->
-<!--          <thead>-->
-<!--          <tr>-->
-<!--            @for (c of table.columns; track c) {-->
-<!--              <th class="border px-4 py-2">{{ c }}</th>-->
-<!--            }-->
-<!--          </tr>-->
-<!--          </thead>-->
-<!--          <tbody>-->
-<!--            @for (row of table.data; track row['id']) {-->
-<!--              <tr>-->
-<!--                @for (c of table.columns; track c) {-->
-<!--                  <td class="border px-2 py-2">{{ row[c] || 'NULL' }}</td>-->
-<!--                }-->
-<!--              </tr>-->
-<!--            } @empty {-->
-<!--              <tr>-->
-<!--                <td class="border px-4 py-2" >0 Resultados encontrados</td>-->
-<!--              </tr>-->
-<!--            }-->
-<!--          </tbody>-->
-<!--        </table>-->
-<!--      </div>-->
-    <div class="overflow-x-scroll">
-        <hlm-table [contentEditable]="false" class="w-full min-w-[400px]">
-            <hlm-trow>
-                @for (c of table.columns; track c) {
-                <hlm-th class="w-60 border">{{ c }}</hlm-th>
-                }
-            </hlm-trow>
-            @for (row of table.data; track row['id']) {
-            <hlm-trow>
-                @for (c of table.columns; track c) {
-                <hlm-td  class="w-60 border overflow-hidden">{{ row[c] || 'NULL' }}</hlm-td>
-                }
-            </hlm-trow>
-            } @empty {
-            <div class="text-center p-10">
-                <hlm-icon size="lg" name="lucideFolderSearch" />
-                <p class="p-4 w-full text-center">0 Resultados encontrados</p>
+          <clr-dropdown>
+            <button type="button" class="btn btn-sm btn-secondary" clrDropdownTrigger>
+              Exportar
+              <cds-icon shape="angle" direction="down"></cds-icon>
+            </button>
+            <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+              <button type="button" (click)="onExportAll()" clrDropdownItem>Exportar tudo</button>
+              <button type="button" (click)="onExportSelected()" [disabled]="selectedRows.length === 0" clrDropdownItem>
+                Exportar selecionados
+              </button>
+            </clr-dropdown-menu>
+          </clr-dropdown>
+
+          <button type="button" class="btn btn-sm btn-secondary" (click)="onRefresh()">
+            <cds-icon shape="refresh"></cds-icon>
+            Atualizar
+          </button>
+        </clr-dg-action-bar>
+
+
+        @for(column of table.columns; track column) {
+        <clr-dg-column [clrDgField]="column">
+          <ng-container *clrDgHideableColumn="{ hidden: false }">{{ column }}</ng-container>
+          <clr-dg-filter [clrDgFilter]="myFilter">
+            <h5 for="title-filter">Filtro por "{{ column }}"</h5>
+            <form clrForm>
+              <clr-datalist-container>
+                <label for="operator" class="clr-control-label">Operador</label>
+                <input placeholder="Operador" minlength="4" name="Selecione" required clrDatalistInput
+                  [disabled]="false" />
+                <datalist>
+                  <option *ngFor="let item of conditionOperatorList" [value]="item.value">
+                    {{ item.label }}
+                  </option>
+                </datalist>
+              </clr-datalist-container>
+            </form>
+            <form class="clr-form">
+              <div class="clr-form-control">
+                <label for="basic" class="clr-control-label">Valor</label>
+                <div class="clr-control-container">
+                  <div class="clr-input-wrapper">
+                    <input type="text" id="basic" placeholder="Pesquisar" class="clr-input" />
+                    <cds-icon class="clr-validate-icon" shape="exclamation-circle"></cds-icon>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </clr-dg-filter>
+        </clr-dg-column>
+        }
+
+        <clr-dg-row *clrDgItems="let row of table.data" [clrDgItem]="row">
+          @for(column of table.columns; track column) {
+          <clr-dg-cell>{{ row[column] || 'NULL' }}</clr-dg-cell>
+          }
+        </clr-dg-row>
+
+        <clr-dg-footer>
+          <clr-dg-pagination (clrDgPageChange)="onPageChange($event)" #pagination [clrDgTotalItems]="table.totalData"
+            [clrDgPage]="table.page" [clrDgPageSize]="table.size">
+            <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">Dados por página</clr-dg-page-size>
+            {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} dados
+          </clr-dg-pagination>
+        </clr-dg-footer>
+      </clr-datagrid>
+      }
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab>
+    <button clrTabLink>Filtros</button>
+    <clr-tab-content *clrIfActive>
+      <form class="clr-form">
+        <div class="clr-form-control">
+          <label for="example" class="clr-control-label">Label</label>
+          <div class="clr-control-container clr-error">
+            <div class="clr-input-wrapper">
+              <input type="text" id="example" placeholder="Example Input" class="clr-input" />
+              <cds-icon class="clr-validate-icon" shape="exclamation-circle"></cds-icon>
             </div>
-            }
+            <span class="clr-subtext">Error message</span>
+          </div>
+        </div>
+      </form>
+    </clr-tab-content>
+  </clr-tab>
 
-             <div class="mt-4 p-4">
-                <nav hlmPagination>
-                    <ul hlmPaginationContent>
-                        <li class="cursor-pointer" hlmPaginationItem (click)="previousPage()">
-                            <hlm-pagination-previous />
-                        </li>
-                        <!-- <li hlmPaginationItem>
-                                <a hlmPaginationLink link="#">1</a>
-                            </li>
-                            <li hlmPaginationItem>
-                                <a hlmPaginationLink link="#" isActive>2</a>
-                            </li>
-                            <li hlmPaginationItem>
-                                <a hlmPaginationLink link="#">3</a>
-                            </li>
-                            <li hlmPaginationItem>
-                                <hlm-pagination-ellipsis />
-                            </li> -->
-                        <li class="cursor-pointer" hlmPaginationItem (click)="nextPage()">
-                            <hlm-pagination-next />
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-        </hlm-table>
-    </div>
-    }
-</div>
+</clr-tabs>

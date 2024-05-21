@@ -1,27 +1,32 @@
-<div class="pt-4">
-    <div class="grid grid-cols-3 gap-4">
-        @if (schemas$ | async; as schemas) {
-        @for (schema of schemas; track schema.name) {
-        <section class="min-h-[200px]" hlmCard>
-            <div class="min-h-[80px] overflow-ellipsis" hlmCardHeader>
-                <h3 hlmCardTitle>{{ schema.name }}</h3>
-            </div>
-            <div hlmCardContent class="grid gap-4">
-                <div class="flex items-center p-4 border border-border space-x-4 rounded-md">
-                    <hlm-icon size="lg" name="lucideNewspaper" />
-                    <div class="flex-1 space-y-1">
-                        <p class="text-sm font-medium leading-none">(-) tabelas</p>
-                        <p class="text-sm text-muted-foreground">Clique para entrar</p>
-                    </div>
-                </div>
-            </div>
-            <div hlmCardFooter class="justify-between">
-                <button class="w-full" hlmBtn (click)="goToSchema(schema)">
-                    Entrar
-                </button>
-            </div>
-        </section>
+@if (schemas$ | async; as schemas) {
+<div class="clr-row">
+  @for (schema of schemas; track schema.name) {
+  <div class="clr-col-lg-4 clr-col-md-4 clr-col-12">
+    <div class="card">
+      <div class="card-header">
+        <cds-icon shape="table"></cds-icon>
+        {{ schema.name }}
+      </div>
+      <div class="card-block">
+        <div class="card-text">
+          Este schema tem {{ schema.tables.length || '(-)' }} tabelas
+        </div>
+        @for (table of schema.tables; track table.columns) {
+        <div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+          <span class="flex w-2 h-2 rounded-full translate-y-1 bg-sky-500"></span>
+          <div class="space-y-1">
+            <p class="text-sm font-medium leading-none">{{ table.tableName }}</p>
+            <p class="text-sm text-muted-foreground">Possui {{ table.columns.length }} colunas</p>
+          </div>
+        </div>
         }
-        }
+      </div>
+      <div class="card-footer">
+        <a class="btn btn-sm btn-link" (click)="goToSchema(schema)">Entrar</a>
+      </div>
     </div>
+  </div>
+
+  }
 </div>
+}

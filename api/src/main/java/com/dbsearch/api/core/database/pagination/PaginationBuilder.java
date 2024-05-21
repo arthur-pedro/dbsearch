@@ -1,17 +1,19 @@
-package com.dbsearch.api.core.database.from;
+package com.dbsearch.api.core.database.pagination;
 
 import lombok.Getter;
 
 @Getter
-public class FromBuilder {
-		private Table table;
+public class PaginationBuilder {
+		private Page page;
 
-		public FromBuilder add(Table table) {
-				this.table = table;
+		public PaginationBuilder add(Page page) {
+				this.page = page;
 				return this;
 		}
 
-		public From build() {
-				return new From(table.getName() + " " + table.getAlias());
+		public Pagination build() {
+				return new Pagination(
+								"LIMIT " + this.page.getLimit() + " OFFSET " + this.page.getOffset()
+				);
 		}
 }

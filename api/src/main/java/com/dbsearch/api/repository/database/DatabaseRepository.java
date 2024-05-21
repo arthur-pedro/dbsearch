@@ -7,7 +7,8 @@ import com.dbsearch.api.core.database.query.QueryBuilder;
 import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
-import com.dbsearch.api.core.database.where.ClauseOperation;
+import com.dbsearch.api.core.database.where.ClauseConditionOperator;
+import com.dbsearch.api.core.database.where.ClauseLogicOperator;
 import com.dbsearch.api.core.database.where.WhereBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -43,7 +44,8 @@ public class DatabaseRepository {
 				Clause clause = new Clause(
 								table,
 								new Column("catalog_name"),
-								ClauseOperation.EQUALS,
+								ClauseConditionOperator.EQUALS,
+								ClauseLogicOperator.AND,
 								databaseName);
 				whereBuilder.add(clause);
 

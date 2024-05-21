@@ -1,4 +1,4 @@
-package com.dbsearch.api.core.database.from;
+package com.dbsearch.api.core.database.pagination;
 
-public record From(String value) {
+public record Pagination(String value) {
 }

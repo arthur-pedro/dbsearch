@@ -2,6 +2,7 @@ package com.dbsearch.api.service;
 
 import com.dbsearch.api.core.database.select.Blocklist;
 import com.dbsearch.api.core.database.select.Column;
+import com.dbsearch.api.core.dto.PaginationDTO;
 import com.dbsearch.api.core.dto.TableDataDTO;
 import com.dbsearch.api.core.dto.TableInfoDTO;
 import com.dbsearch.api.core.dto.TableSearchDTO;
@@ -33,34 +34,46 @@ public class TableService {
 
 		public TableDataDTO searchInTable(TableSearchDTO search) {
 				TableRepository tableRepository = new TableRepository(entityManager);
-				List<String> columnNames = findTableColumns(search.getTableName(), search.getSchema()).getColumns();
-				if (search.getFields() == null || search.getFields().isEmpty()) {
-						search.setFields(columnNames);
+				List<String> columnNames = findTableColumns(
+								search.getTableName(),
+								search.getSchema()
+				)
+								.getColumns();
+				if (search.getColumns() == null || search.getColumns().isEmpty()) {
+						search.setColumns(columnNames);
 				} else {
 						Blocklist blocklist = new Blocklist();
-						search.setFields(
-										search.getFields()
+						search.setColumns(
+										search.getColumns()
 														.stream()
 														.filter(column->blocklist.IsBlocked(new Column(column)))
 														.toList()
 						);
 				}
-				List<Object[]> results = tableRepository.search(
+
+				PaginationDTO<Object> results = tableRepository.search(
 								search.getTableName(),
-								search.getSchema(),
-								search.getFields(),
+								search.getColumns(),
 								search.getPage(),
 								search.getPageSize(),
-								search.getWhere());
+								search.getFilters());
+
 				List<Map<String, Object>> mappedResults = new ArrayList<>();
-				for (Object[] row : results) {
+				for (Object[] row : results.getData()) {
 						Map<String, Object> rowMap = new HashMap<>();
 						for (int i = 0; i < row.length; i++) {
 								rowMap.put(columnNames.get(i), row[i]);
 						}
 						mappedResults.add(rowMap);
 				}
-				return new TableDataDTO(search.getTableName(), columnNames, mappedResults);
+				return new TableDataDTO(
+								search.getTableName(),
+								columnNames,
+								mappedResults,
+								results.getTotal(),
+								results.getPage(),
+								results.getSize()
+				);
 		}
 
 		public TableInfoDTO findTableColumns(String tableName, String schema) {

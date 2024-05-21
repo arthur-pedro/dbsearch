@@ -4,6 +4,8 @@ import com.dbsearch.api.core.database.from.From;
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.order.Order;
 import com.dbsearch.api.core.database.order.OrderBuilder;
+import com.dbsearch.api.core.database.pagination.Pagination;
+import com.dbsearch.api.core.database.pagination.PaginationBuilder;
 import com.dbsearch.api.core.database.select.Select;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Where;
@@ -14,9 +16,7 @@ public class QueryBuilder {
 		private From from;
 		private Where where;
 		private Order order;
-
-		public QueryBuilder() {
-		}
+		private Pagination pagination;
 
 		public QueryBuilder select(SelectBuilder value) {
 				this.select = value.build();
@@ -38,11 +38,17 @@ public class QueryBuilder {
 				return this;
 		}
 
+		public QueryBuilder page(PaginationBuilder value) {
+				this.pagination = value.build();
+				return this;
+		}
+
 		public String build() {
-				return String.format("SELECT %s FROM %s WHERE 1=1 AND %s",
+				return String.format("SELECT %s FROM %s WHERE 1=1 %s",
 								select.value(),
 								from.value(),
 								where.value())
-								+ (order != null ? " ORDER BY " + order.value() : "");
+								+ (order != null ? " ORDER BY " + order.value() : "")
+								+ (pagination != null ? " " + pagination.value() : " LIMIT 10 OFFSET 0");
 		}
 }

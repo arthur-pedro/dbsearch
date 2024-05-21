@@ -9,7 +9,8 @@ import com.dbsearch.api.core.database.query.QueryBuilder;
 import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
-import com.dbsearch.api.core.database.where.ClauseOperation;
+import com.dbsearch.api.core.database.where.ClauseConditionOperator;
+import com.dbsearch.api.core.database.where.ClauseLogicOperator;
 import com.dbsearch.api.core.database.where.WhereBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -43,13 +44,15 @@ public class ConnectionRepository {
 				Clause datistemplateClause = new Clause(
 								table,
 								new Column("datistemplate"),
-								ClauseOperation.EQUALS,
+								ClauseConditionOperator.EQUALS,
+								ClauseLogicOperator.AND,
 								Boolean.FALSE.toString()
 				);
 				Clause datnameClause = new Clause(
 								table,
 								new Column("datname"),
-								ClauseOperation.EQUALS,
+								ClauseConditionOperator.EQUALS,
+								ClauseLogicOperator.AND,
 								databaseName
 				);
 				whereBuilder

@@ -30,6 +30,9 @@
       ],
       "@spartan-ng/ui-pagination-helm": [
         "./src/@core/components/ui-pagination-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-select-helm": [
+        "./src/@core/components/ui-select-helm/src/index.ts"
       ]
     }
   },

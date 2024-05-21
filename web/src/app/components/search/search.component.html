@@ -1,0 +1,54 @@
+<div class="flex items-center justify-end mt-4 gap-2">
+  <form clrForm>
+    <input clrInput type="text" placeholder='Pesquisar na página' [formControl]="searchService.searchInTable"
+      aria-label='Filtrar' class='flex-auto' />
+  </form>
+
+  <button hlmBtn>
+    <cds-icon class="mr-2" shape="user"></cds-icon>
+    Home
+  </button>
+  <button (click)="goBack()" hlmBtn>
+    <cds-icon class="mr-2" shape="user"></cds-icon>
+    Voltar
+  </button>
+  <button (click)="export()" hlmBtn>
+    <cds-icon class="mr-2" shape="user"></cds-icon>
+    Exportar
+  </button>
+  <!-- <hlm-sheet side="bottom">
+      <button brnSheetTrigger hlmBtn id="where-filter">
+        <cds-icon class="mr-2" clrVerticalNavIcon shape="user"></cds-icon>
+        Pesquisar
+      </button>
+      <hlm-sheet-content *brnSheetContent="let ctx">
+        <hlm-sheet-header>
+          <h3 hlmSheetTitle>Filtros</h3>
+          <p hlmSheetDescription>Aplicar filtro para tabela <strong>{{ searchService.getTable() }}</strong>
+          </p>
+        </hlm-sheet-header>
+        <div class="py-4">
+          @for (column of searchService.getColumns(); track column) {
+          <div class="grid grid-cols-4 gap-4 items-center mb-4">
+            <label hlmLabel for="{{column}}" class="text-right">{{ column }}</label>
+            <brn-select placeholder="Selecione uma opção" [multiple]="false">
+              <hlm-select-trigger class="w-56">
+                <hlm-select-value />
+              </hlm-select-trigger>
+              <hlm-select-content>
+                @for (item of searchService.conditionOperatorOptions; track $index) {
+                <hlm-option [value]="item.value">{{ item.label }}</hlm-option>
+                }
+              </hlm-select-content>
+            </brn-select>
+            <input class="col-span-2" hlmInput id="{{column}}" value="{{searchService.getFilters().get(column)?.value}}"
+              (input)="onInputFilter(searchService.getFilters().get(column), $event)" />
+          </div>
+          }
+        </div>
+        <hlm-sheet-footer>
+          <button (click)="searchService.submit()" hlmBtn type="submit">Aplicar</button>
+        </hlm-sheet-footer>
+      </hlm-sheet-content>
+    </hlm-sheet> -->
+</div>

@@ -3,20 +3,24 @@ package com.dbsearch.api.repository.table;
 
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.from.Table;
+import com.dbsearch.api.core.database.pagination.Page;
+import com.dbsearch.api.core.database.pagination.PaginationBuilder;
+import com.dbsearch.api.core.database.query.CountBuilder;
 import com.dbsearch.api.core.database.query.QueryBuilder;
 import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
-import com.dbsearch.api.core.database.where.ClauseOperation;
+import com.dbsearch.api.core.database.where.ClauseConditionOperator;
+import com.dbsearch.api.core.database.where.ClauseLogicOperator;
 import com.dbsearch.api.core.database.where.WhereBuilder;
+import com.dbsearch.api.core.dto.FilterDTO;
+import com.dbsearch.api.core.dto.PaginationDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 @Transactional
@@ -41,7 +45,8 @@ public class TableRepository {
 								new WhereBuilder().add(
 												new Clause(
 																new Table("pg_tables"),
-																new Column("schemaname"), ClauseOperation.EQUALS, schema)
+																new Column("schemaname"), ClauseConditionOperator.EQUALS, ClauseLogicOperator.AND,
+																schema)
 								));
 				String sql = queryBuilder.build();
 				Query query = entityManager.createNativeQuery(sql);
@@ -61,9 +66,11 @@ public class TableRepository {
 				WhereBuilder whereBuilder = new WhereBuilder();
 
 				whereBuilder.add(
-								new Clause(fromBuilder.getTable(), new Column("table_name"), ClauseOperation.EQUALS, tableName));
+								new Clause(fromBuilder.getTable(), new Column("table_name"), ClauseConditionOperator.EQUALS,
+												ClauseLogicOperator.AND, tableName));
 				whereBuilder.add(
-								new Clause(fromBuilder.getTable(), new Column("table_schema"), ClauseOperation.EQUALS, schema));
+								new Clause(fromBuilder.getTable(), new Column("table_schema"), ClauseConditionOperator.EQUALS,
+												ClauseLogicOperator.AND, schema));
 
 				queryBuilder
 								.select(selectBuilder)
@@ -76,30 +83,79 @@ public class TableRepository {
 		}
 
 		@SuppressWarnings("unchecked")
-		public List<Object[]> search(String tableName, String schema, List<String> fields, int page, int pageSize,
-		                             Map<String, String> where) {
-				if (page < 1) {
-						page = 1;
-				}
-				if (pageSize < 1) {
-						pageSize = 10;
-				}
-				String whereClouse = "";
-				if (where != null && !where.isEmpty()) {
-						whereClouse = " WHERE 1=1 AND " + createWhereClause(where);
-				}
-				String selectFields = String.join(", ", fields.stream().map(field->"\"" + field + "\"").toList());
-				String limit = " LIMIT " + pageSize + " OFFSET " + (page - 1) * pageSize;
-				String sql = "SELECT " + selectFields + " FROM " + schema + ".\"" + tableName + "\"" + whereClouse + limit;
-				Query query = entityManager.createNativeQuery(sql);
-				return query.getResultList();
+		public PaginationDTO<Object> search(
+						String tableName,
+						List<String> columns,
+						int page,
+						int pageSize,
+						List<FilterDTO> filters
+		) {
+				QueryBuilder queryBuilder = new QueryBuilder();
+
+				SelectBuilder selectBuilder = new SelectBuilder();
+				columns.forEach(column->selectBuilder.add(new Column(column)));
+
+				FromBuilder fromBuilder = new FromBuilder();
+				Table table = new Table(tableName);
+				table.setCamelCase();
+				fromBuilder.add(table);
+
+				WhereBuilder whereBuilder = new WhereBuilder();
+				filters.forEach((filter)->{
+						Clause clause = new Clause(
+										table,
+										new Column(filter.getColumn()),
+										filter.getConditionOperator(),
+										filter.getLogicOperator(),
+										filter.getValue());
+						whereBuilder.add(clause);
+				});
+
+				PaginationBuilder paginationBuilder = new PaginationBuilder();
+				paginationBuilder.add(new Page(page, pageSize));
+
+				queryBuilder
+								.select(selectBuilder)
+								.from(fromBuilder)
+								.where(whereBuilder)
+								.page(paginationBuilder);
+
+				String sql = queryBuilder.build();
+				Query query = this.entityManager.createNativeQuery(sql);
+
+				int totalElements = this.count(tableName, filters);
+
+				return new PaginationDTO<Object>(
+								query.getResultList(),
+								totalElements,
+								page,
+								pageSize
+				);
 		}
 
-		public static String createWhereClause(Map<String, String> filters) {
-				return filters.entrySet()
-								.stream()
-								.map(entry->"\"" + entry.getKey() + "\" " + "  ILIKE '%" + entry.getValue() + "%'")
-								.collect(Collectors.joining(" AND "));
-		}
+		public int count(String tableName, List<FilterDTO> filters) {
+				Table table = new Table(tableName);
+				table.setCamelCase();
 
+				FromBuilder fromBuilder = new FromBuilder();
+				fromBuilder.add(table);
+
+				WhereBuilder whereBuilder = new WhereBuilder();
+				filters.forEach((filter)->{
+						Clause clause = new Clause(
+										table,
+										new Column(filter.getColumn()),
+										filter.getConditionOperator(),
+										filter.getLogicOperator(),
+										filter.getValue());
+						whereBuilder.add(clause);
+				});
+
+				String sql = new CountBuilder()
+								.from(fromBuilder)
+								.where(whereBuilder)
+								.build();
+				Query query = this.entityManager.createNativeQuery(sql);
+				return ((Number) query.getSingleResult()).intValue();
+		}
 }

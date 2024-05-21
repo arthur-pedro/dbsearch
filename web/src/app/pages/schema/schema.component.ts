@@ -10,9 +10,6 @@ import { HlmTableComponent } from '../../../@core/components/ui-table-helm/src/l
 import { HlmTdComponent } from '../../../@core/components/ui-table-helm/src/lib/hlm-td.component';
 import { HlmThComponent } from '../../../@core/components/ui-table-helm/src/lib/hlm-th.component';
 import { HlmTrowComponent } from '../../../@core/components/ui-table-helm/src/lib/hlm-trow.component';
-import { Schema } from '../../../@core/contracts/schema/schema.contract';
-import { Table } from '../../../@core/contracts/table/table.contract';
-import { DatabaseGateway } from '../../gateway/database-gateway.service';
 import { TableGateway } from '../../gateway/table-gateway.service';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmCardContentDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card-content.directive';
@@ -21,34 +18,23 @@ import { HlmCardFooterDirective } from '../../../@core/components/ui-card-helm/s
 import { HlmCardHeaderDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card-header.directive';
 import { HlmCardTitleDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card-title.directive';
 import { HlmCardDirective } from '../../../@core/components/ui-card-helm/src/lib/hlm-card.directive';
+import { Table } from '../../../@core/contracts/table/response/table.contract';
+import { ClarityModule } from '@clr/angular';
+import { ClarityIcons, tableIcon } from '@cds/core/icon';
+
+ClarityIcons.addIcons(tableIcon);
 
 @Component({
   selector: 'app-schema',
   standalone: true,
-  imports: [
-    CommonModule,
-    HlmCaptionComponent,
-    HlmTableComponent,
-    HlmTdComponent,
-    HlmThComponent,
-    HlmTrowComponent,
-    HlmButtonDirective,
-    HlmButtonDirective,
-    HlmCardContentDirective,
-    HlmCardDescriptionDirective,
-    HlmCardDirective,
-    HlmCardFooterDirective,
-    HlmCardHeaderDirective,
-    HlmCardTitleDirective,
-    HlmIconComponent,
-  ],
-  providers: [provideIcons({ lucideBox, lucideTable })],
+  imports: [CommonModule, ClarityModule],
   templateUrl: './schema.component.html',
   styleUrl: './schema.component.css',
 })
 export class SchemaComponent implements OnDestroy {
   protected tables$: Observable<Table[]> = new Observable();
   private schemaName: string = '';
+  private connectionId: string = '';
   constructor(
     private tableService: TableGateway,
     private snapshot: ActivatedRoute,
@@ -56,8 +42,11 @@ export class SchemaComponent implements OnDestroy {
   ) {
     this.snapshot.params.subscribe((params) => {
       const id = params['id'];
+      const connectionId = params['connectionId'];
       this.schemaName = id;
+      this.connectionId = connectionId;
       if (!id) this.router.navigate(['/']);
+      if (!connectionId) this.router.navigate(['/']);
       this.tables$ = this.tableService.list(params['id']);
     });
   }
@@ -68,8 +57,10 @@ export class SchemaComponent implements OnDestroy {
 
   goToTable(table: Table) {
     this.router.navigate(
-      [`schema/${this.schemaName}/table/${table.tableName}`],
-      { queryParams: { page: '1', pageSize: '10' } }
+      [
+        `dashboard/connection/${this.connectionId}/schema/${this.schemaName}/table/${table.tableName}`,
+      ],
+      { queryParams: { page: '1', pageSize: '50' } }
     );
   }
 }

@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 public class Table {
-		private final String name;
 		private final String alias;
+		private String name;
 		@Setter private String schema;
 
 		public Table(String name) {
@@ -16,5 +16,10 @@ public class Table {
 
 		private String buildAlias() {
 				return this.name.substring(0, 1);
+		}
+
+
+		public void setCamelCase() {
+				this.name = String.format("\"%s\"", this.name);
 		}
 }

@@ -10,7 +10,7 @@ public class Column {
 		private String alias;
 
 		public Column(String name) {
-				this.name = name;
+				this.name = String.format("\"%s\"", name);
 				this.alias = this.buildAlias(this.name);
 		}
 

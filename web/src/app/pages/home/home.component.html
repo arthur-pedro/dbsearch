@@ -1,42 +1,37 @@
-<div class="pt-4">
-    <div class="grid grid-cols-3 gap-4">
-        @if (connections$ | async; as connections) {
-        @for (connection of connections; track connection.id) {
-        <section class="min-h-[250px]" hlmCard>
-            <div class="min-h-[100px] overflow-ellipsis" hlmCardHeader>
-                <h3 hlmCardTitle>{{ connection.name }}</h3>
-                <p hlmCardDescription>{{ connection.description }}</p>
-            </div>
-            <div hlmCardContent class="grid gap-4">
-                <div class="flex items-center p-4 border border-border space-x-4 rounded-md min-h-[150px]">
-                    <hlm-icon size="lg" name="lucideGlobe" />
-                    <div class="flex-1 space-y-1">
-                        <p class="text-sm font-medium leading-none">{{ connection.driver }}</p>
-                        <p class="text-sm text-muted-foreground overscroll-auto">{{ connection.host }}</p>
-                    </div>
-                </div>
-                <div>
-                    @for (database of connection.databases; track database.name) {
-                    <div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
-                        <span class="flex w-2 h-2 rounded-full translate-y-1 bg-sky-500"></span>
-                        <div class="space-y-1">
-                            <p class="text-sm font-medium leading-none">{{ database.name }}</p>
-                            <p class="text-sm text-muted-foreground">Possui {{ database.schemas.length }} tabelas</p>
-                        </div>
-                    </div>
-                    }
-                </div>
-            </div>
-            <div hlmCardFooter class="justify-between">
-                <button class="w-full" hlmBtn (click)="goToConnection(connection)">
-                    Conectar
-                </button>
-            </div>
-        </section>
-        }
-        }
+<!-- @if (connections$ | async; as connections) {
+<div class="clr-row">
+  @for (connection of connections; track connection.id) {
 
+  <div class="clr-col-lg-4 clr-col-md-6 clr-col-12">
+    <div class="card">
+      <div class="card-header">{{ connection.name }}</div>
+      <div class="card-block">
+        <div class="card-title">{{ connection.host }}</div>
+        <div class="card-text">
+          {{ connection.description }}
+        </div>
+        <div class="card-text">
+          <span class="text-muted
+            font-semibold">{{ connection.databases.length }} {{ connection.databases.length > 1 ? 'databases' :
+            'database' }}</span>
+        </div>
+        <div>
+          @for (database of connection.databases; track database.name) {
+          <div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+            <span class="flex w-2 h-2 rounded-full translate-y-1 bg-sky-500"></span>
+            <div class="space-y-1">
+              <p class="text-sm font-medium leading-none">{{ database.name }}</p>
+              <p class="text-sm text-muted-foreground">Possui {{ database.schemas.length }} tabelas</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-sm btn-link" (click)="goToConnection(connection)">Conectar</button>
+      </div>
     </div>
-
-
+  </div>
+  }
 </div>
+} -->
