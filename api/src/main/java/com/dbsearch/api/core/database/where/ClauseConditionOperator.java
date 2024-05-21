@@ -12,7 +12,6 @@ public enum ClauseOperation {
 		LIKE("LIKE"),
 		IS_NULL("IS NULL"),
 		IS_NOT_NULL("IS NOT NULL"),
-		OR("OR"),
 		EQUALS("=");
 
 		private final String value;
