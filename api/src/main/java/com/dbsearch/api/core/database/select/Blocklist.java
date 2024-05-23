@@ -1,6 +1,7 @@
 package com.dbsearch.api.core.database.select;
 
 import com.dbsearch.api.config.tenant.FilePath;
+import com.dbsearch.api.core.database.column.Column;
 import org.springframework.data.repository.init.ResourceReader;
 
 import java.io.BufferedReader;

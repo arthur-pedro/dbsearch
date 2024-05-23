@@ -1,7 +1,7 @@
 package com.dbsearch.api.core.database.where;
 
+import com.dbsearch.api.core.database.column.Column;
 import com.dbsearch.api.core.database.from.Table;
-import com.dbsearch.api.core.database.select.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +25,7 @@ public class Clause {
 														+ " "
 														+ table.getAlias()
 														+ "."
-														+ column.getName()
+														+ column.getFormatedName()
 														+ " "
 														+ logicCondition.getValue();
 				else if (logicCondition.equals(ClauseConditionOperator.IN) ||
@@ -35,7 +35,7 @@ public class Clause {
 														+ " "
 														+ table.getAlias()
 														+ "."
-														+ column.getName()
+														+ column.getFormatedName()
 														+ " "
 														+ logicCondition.getValue()
 														+ " ("
@@ -47,7 +47,7 @@ public class Clause {
 														+ " "
 														+ table.getAlias()
 														+ "."
-														+ column.getName()
+														+ column.getFormatedName()
 														+ " "
 														+ logicCondition.getValue()
 														+ " "
@@ -58,7 +58,7 @@ public class Clause {
 														+ " "
 														+ table.getAlias()
 														+ "."
-														+ column.getName()
+														+ column.getFormatedName()
 														+ " "
 														+ logicCondition.getValue()
 														+ " '%"
@@ -76,7 +76,7 @@ public class Clause {
 														+ " "
 														+ table.getAlias()
 														+ "."
-														+ column.getName()
+														+ column.getFormatedName()
 														+ " "
 														+ logicCondition.getValue()
 														+ " '"

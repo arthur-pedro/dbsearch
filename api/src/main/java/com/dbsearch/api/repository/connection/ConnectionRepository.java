@@ -1,12 +1,12 @@
 package com.dbsearch.api.repository.connection;
 
 
+import com.dbsearch.api.core.database.column.Column;
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.from.Table;
 import com.dbsearch.api.core.database.order.OrderBuilder;
 import com.dbsearch.api.core.database.order.OrderDirection;
 import com.dbsearch.api.core.database.query.QueryBuilder;
-import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
 import com.dbsearch.api.core.database.where.ClauseConditionOperator;
@@ -33,24 +33,29 @@ public class ConnectionRepository {
 		public List<String> getDatabases(String databaseName) {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
+				Table pgCatalogTAble = new Table("pg_catalog.pg_database");
+				pgCatalogTAble.addColumn(new Column("datname"));
+				Column datistemplateColumn = new Column("datistemplate");
+				datistemplateColumn.setSelectable(false);
+				pgCatalogTAble.addColumn(datistemplateColumn);
+
 				SelectBuilder selectBuilder = new SelectBuilder();
-				selectBuilder.add(new Column("datname"));
+				selectBuilder.add(pgCatalogTAble);
 
 				FromBuilder fromBuilder = new FromBuilder();
-				Table table = new Table("pg_catalog.pg_database");
-				fromBuilder.add(table);
+				fromBuilder.add(pgCatalogTAble);
 
 				WhereBuilder whereBuilder = new WhereBuilder();
 				Clause datistemplateClause = new Clause(
-								table,
-								new Column("datistemplate"),
+								pgCatalogTAble,
+								pgCatalogTAble.getColumn("datistemplate"),
 								ClauseConditionOperator.EQUALS,
 								ClauseLogicOperator.AND,
 								Boolean.FALSE.toString()
 				);
 				Clause datnameClause = new Clause(
-								table,
-								new Column("datname"),
+								pgCatalogTAble,
+								pgCatalogTAble.getColumn("datname"),
 								ClauseConditionOperator.EQUALS,
 								ClauseLogicOperator.AND,
 								databaseName
@@ -61,8 +66,8 @@ public class ConnectionRepository {
 
 				OrderBuilder orderBuilder = new OrderBuilder();
 				orderBuilder.add(
-								table,
-								new Column("datname"),
+								pgCatalogTAble,
+								pgCatalogTAble.getColumn("datname"),
 								OrderDirection.ASC);
 
 				queryBuilder

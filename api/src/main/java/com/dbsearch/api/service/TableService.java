@@ -1,7 +1,7 @@
 package com.dbsearch.api.service;
 
+import com.dbsearch.api.core.database.column.Column;
 import com.dbsearch.api.core.database.select.Blocklist;
-import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.dto.PaginationDTO;
 import com.dbsearch.api.core.dto.TableDataDTO;
 import com.dbsearch.api.core.dto.TableInfoDTO;

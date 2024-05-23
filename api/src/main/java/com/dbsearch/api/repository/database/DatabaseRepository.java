@@ -1,10 +1,10 @@
 package com.dbsearch.api.repository.database;
 
 
+import com.dbsearch.api.core.database.column.Column;
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.from.Table;
 import com.dbsearch.api.core.database.query.QueryBuilder;
-import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
 import com.dbsearch.api.core.database.where.ClauseConditionOperator;
@@ -31,19 +31,23 @@ public class DatabaseRepository {
 		public List<String> getSchemas(String databaseName) {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
-				SelectBuilder selectBuilder = new SelectBuilder();
-				selectBuilder.add(new Column("schema_name"));
+				Table informationSchemaTable = new Table("information_schema.schemata");
+				informationSchemaTable.addColumn(new Column("schema_name"));
+				Column catalogNameColumn = new Column("catalog_name");
+				catalogNameColumn.setSelectable(false);
+				informationSchemaTable.addColumn(catalogNameColumn);
 
+
+				SelectBuilder selectBuilder = new SelectBuilder();
+				selectBuilder.add(informationSchemaTable);
 
 				FromBuilder fromBuilder = new FromBuilder();
-				Table table = new Table("information_schema.schemata");
-				fromBuilder.add(table);
-
+				fromBuilder.add(informationSchemaTable);
 
 				WhereBuilder whereBuilder = new WhereBuilder();
 				Clause clause = new Clause(
-								table,
-								new Column("catalog_name"),
+								informationSchemaTable,
+								informationSchemaTable.getColumn("catalog_name"),
 								ClauseConditionOperator.EQUALS,
 								ClauseLogicOperator.AND,
 								databaseName);

@@ -1,12 +1,12 @@
 package com.dbsearch.api.core.database.order;
 
+import com.dbsearch.api.core.database.column.Column;
 import com.dbsearch.api.core.database.from.Table;
-import com.dbsearch.api.core.database.select.Column;
 import lombok.Getter;
 
 @Getter
 public class OrderBuilder {
-		private Table table;
+		private Table table; // TODO: Change to List<Table> tables
 		private Column column;
 		private OrderDirection direction;
 

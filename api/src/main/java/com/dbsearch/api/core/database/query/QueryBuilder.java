@@ -44,11 +44,15 @@ public class QueryBuilder {
 		}
 
 		public String build() {
-				return String.format("SELECT %s FROM %s WHERE 1=1 %s",
+				String DEFAULT_LIMIT = "10";
+				String DEFAULT_SELECT = "SELECT %s FROM %s WHERE 1=1 %s";
+				String DEFAULT_OFFSET = "0";
+				return String.format(DEFAULT_SELECT,
 								select.value(),
 								from.value(),
 								where.value())
-								+ (order != null ? " ORDER BY " + order.value() : "")
-								+ (pagination != null ? " " + pagination.value() : " LIMIT 10 OFFSET 0");
+								+ (order != null ? " ORDER BY " + order.value() : "") // TODO: Colocar build da string no Order
+								+ (pagination != null ? " " + pagination.value() :
+								" LIMIT " + DEFAULT_LIMIT + " OFFSET " + DEFAULT_OFFSET); // TODO: Colocar build da string no Pagination
 		}
 }

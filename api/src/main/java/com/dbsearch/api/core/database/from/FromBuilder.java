@@ -12,6 +12,6 @@ public class FromBuilder {
 		}
 
 		public From build() {
-				return new From(table.getName() + " " + table.getAlias());
+				return new From(table);
 		}
 }

@@ -1,13 +1,13 @@
 package com.dbsearch.api.repository.table;
 
 
+import com.dbsearch.api.core.database.column.Column;
 import com.dbsearch.api.core.database.from.FromBuilder;
 import com.dbsearch.api.core.database.from.Table;
 import com.dbsearch.api.core.database.pagination.Page;
 import com.dbsearch.api.core.database.pagination.PaginationBuilder;
 import com.dbsearch.api.core.database.query.CountBuilder;
 import com.dbsearch.api.core.database.query.QueryBuilder;
-import com.dbsearch.api.core.database.select.Column;
 import com.dbsearch.api.core.database.select.SelectBuilder;
 import com.dbsearch.api.core.database.where.Clause;
 import com.dbsearch.api.core.database.where.ClauseConditionOperator;
@@ -35,17 +35,29 @@ public class TableRepository {
 		public List<String> findTableNames(String schema) {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
+				Table pgTable = new Table("pg_tables");
+				Column tableNameColumn = new Column("tablename");
+				Column schemanameColumn = new Column("schemaname");
+				tableNameColumn.setSelectable(true);
+				schemanameColumn.setSelectable(false);
+				pgTable.addColumn(tableNameColumn);
+				pgTable.addColumn(schemanameColumn);
+
 				queryBuilder.select(
-								new SelectBuilder().add(new Column("tablename"))
+								new SelectBuilder()
+												.add(pgTable)
 				);
 				queryBuilder.from(
-								new FromBuilder().add(new Table("pg_tables")))
+								new FromBuilder()
+												.add(pgTable))
 				;
 				queryBuilder.where(
 								new WhereBuilder().add(
 												new Clause(
-																new Table("pg_tables"),
-																new Column("schemaname"), ClauseConditionOperator.EQUALS, ClauseLogicOperator.AND,
+																pgTable,
+																pgTable.getColumn("schemaname"),
+																ClauseConditionOperator.EQUALS,
+																ClauseLogicOperator.AND,
 																schema)
 								));
 				String sql = queryBuilder.build();
@@ -57,20 +69,38 @@ public class TableRepository {
 		public List<String> findColumnsFromTable(String tableName, String schema) {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
+				Table informationTable = new Table("information_schema.columns");
+				Column columnNameColumn = new Column("column_name");
+				Column tableNameColumn = new Column("table_name");
+				Column tableSchemaColumn = new Column("table_schema");
+				columnNameColumn.setSelectable(true);
+				tableNameColumn.setSelectable(false);
+				tableSchemaColumn.setSelectable(false);
+				informationTable.addColumn(columnNameColumn);
+				informationTable.addColumn(tableNameColumn);
+				informationTable.addColumn(tableSchemaColumn);
+
 				SelectBuilder selectBuilder = new SelectBuilder();
-				selectBuilder.add(new Column("column_name"));
+				selectBuilder.add(informationTable);
 
 				FromBuilder fromBuilder = new FromBuilder();
-				fromBuilder.add(new Table("information_schema.columns"));
+				fromBuilder.add(informationTable);
 
 				WhereBuilder whereBuilder = new WhereBuilder();
-
 				whereBuilder.add(
-								new Clause(fromBuilder.getTable(), new Column("table_name"), ClauseConditionOperator.EQUALS,
-												ClauseLogicOperator.AND, tableName));
+								new Clause(
+												informationTable,
+												informationTable.getColumn("table_name"),
+												ClauseConditionOperator.EQUALS,
+												ClauseLogicOperator.AND,
+												tableName));
 				whereBuilder.add(
-								new Clause(fromBuilder.getTable(), new Column("table_schema"), ClauseConditionOperator.EQUALS,
-												ClauseLogicOperator.AND, schema));
+								new Clause(
+												informationTable,
+												informationTable.getColumn("table_schema"),
+												ClauseConditionOperator.EQUALS,
+												ClauseLogicOperator.AND,
+												schema));
 
 				queryBuilder
 								.select(selectBuilder)
@@ -92,19 +122,21 @@ public class TableRepository {
 		) {
 				QueryBuilder queryBuilder = new QueryBuilder();
 
+				Table searchingTable = new Table(tableName);
+				searchingTable.setCamelCase();
+				searchingTable.addColumn(columns.stream().map(Column::new).toList());
+
 				SelectBuilder selectBuilder = new SelectBuilder();
-				columns.forEach(column->selectBuilder.add(new Column(column)));
+				selectBuilder.add(searchingTable);
 
 				FromBuilder fromBuilder = new FromBuilder();
-				Table table = new Table(tableName);
-				table.setCamelCase();
-				fromBuilder.add(table);
+				fromBuilder.add(searchingTable);
 
 				WhereBuilder whereBuilder = new WhereBuilder();
 				filters.forEach((filter)->{
 						Clause clause = new Clause(
-										table,
-										new Column(filter.getColumn()),
+										searchingTable,
+										searchingTable.getColumn(filter.getColumn()),
 										filter.getConditionOperator(),
 										filter.getLogicOperator(),
 										filter.getValue());

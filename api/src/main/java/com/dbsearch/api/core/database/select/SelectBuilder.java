@@ -1,10 +1,11 @@
 package com.dbsearch.api.core.database.select;
 
+import com.dbsearch.api.core.database.column.Column;
+import com.dbsearch.api.core.database.from.Table;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class SelectBuilder {
@@ -15,17 +16,18 @@ public class SelectBuilder {
 				this.blocklist = new Blocklist();
 		}
 
-		public SelectBuilder add(Column column) {
-				if (blocklist.IsBlocked(column)) {
-						this.columns.add(column);
-				}
+		public SelectBuilder add(Table table) {
+				table.getColumns().forEach(this::pickColumn);
 				return this;
 		}
 
+		private void pickColumn(Column column) {
+				if (column.isSelectable() && blocklist.IsBlocked(column)) {
+						this.columns.add(column);
+				}
+		}
+
 		public Select build() {
-				String formattedFields = columns.stream()
-								.map(Column::getName)
-								.collect(Collectors.joining(", "));
-				return new Select(formattedFields);
+				return new Select(this.columns);
 		}
 }
